@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./authPages.css";
 
 interface RegisterResponse {
-  idToken?: string;
+  uid?: string;
   error?: {
     message?: string;
   };
@@ -38,10 +38,12 @@ const RegisterPage: React.FC = () => {
       console.log("Response status:", response.status);
       console.log("Response data:", data);
 
-      if (response.ok && data.idToken) {
-        localStorage.setItem("userToken", data.idToken);
+      if (response.ok && data.uid) {
+        localStorage.setItem("userToken", data.uid);
         navigate("/");
       } else {
+        console.log(data);
+        console.log(response);
         setError(data.error?.message || "Registration failed");
       }
     } catch (err) {

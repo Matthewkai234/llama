@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
         localStorage.setItem("userToken", data.idToken);
         navigate("/");
       } else {
-        setError(data.error?.message || "Login failed");
+        setError(data.error?.message || "Invalid email or password");
       }
     } catch (err) {
       setError("Something went wrong. Try again later.");

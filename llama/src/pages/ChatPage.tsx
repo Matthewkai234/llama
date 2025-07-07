@@ -69,18 +69,36 @@ const ChatPage: React.FC = () => {
         <div className="messages-container">
           {messages.map((msg, idx) => (
             <div
-              key={idx}
-              className={`message ${
-                msg.sender === "user" ? "user-message" : "bot-message"
+              className={`message-container ${
+                msg.sender === "user" ? "user-container" : "bot-container"
               }`}
+              key={idx}
             >
-              <strong>{msg.sender === "user" ? "You" : "Bot"}:</strong>{" "}
-              {msg.text}
+              <div
+                className={`message ${
+                  msg.sender === "user" ? "user-message" : "bot-message"
+                }`}
+              >
+                <strong>{msg.sender === "user" ? "You" : "Bot"}:</strong>{" "}
+                {msg.text}
+              </div>
               <button
                 onClick={() => setReplyTo(msg.text)}
                 className="reply-button"
+                title="Reply"
               >
-                Reply
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 9V5L3 12L10 19V14.9C15 14.9 18.5 16.5 21 20C20 15 17 10 10 9Z"
+                    fill="#4a90e2"
+                  />
+                </svg>
               </button>
             </div>
           ))}
@@ -88,8 +106,28 @@ const ChatPage: React.FC = () => {
 
         {replyTo && (
           <div className="replying-to">
-            Replying to: <em>{replyTo}</em>
-            <button onClick={() => setReplyTo(null)}>Cancel</button>
+            <div className="replying-indicator">
+              <span>Replying to:</span>
+              <div className="replying-content">{replyTo}</div>
+            </div>
+            <button
+              onClick={() => setReplyTo(null)}
+              className="cancel-reply-button"
+              aria-label="Cancel reply"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                  fill="#555"
+                />
+              </svg>
+            </button>
           </div>
         )}
         <form onSubmit={handleSend} className="input-form">

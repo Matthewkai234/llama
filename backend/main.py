@@ -5,6 +5,8 @@ from firebase_admin import credentials, auth
 import requests
 from dotenv import load_dotenv
 import os
+import re
+
 
 load_dotenv()
 
@@ -22,6 +24,13 @@ def signup():
     email = data.get("email")
     password = data.get("password")
 
+    email_pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    if not re.match(email_pattern, email):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    if not password:
+        return jsonify({"error": "Password is required"}), 400
+
     try:
         user = auth.create_user(email=email, password=password)
         return jsonify({"message": "User created", "uid": user.uid}), 201
@@ -33,6 +42,13 @@ def login():
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
+
+    email_pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    if not re.match(email_pattern, email):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    if not password:
+        return jsonify({"error": "Password is required"}), 400
 
     payload = {
         "email": email,
@@ -57,18 +73,17 @@ def login():
 def chat():
     data = request.get_json()
     user_message = data.get("message")
-    reply_to = data.get("reply_to")  # ✅ No indentation issue here
+    reply_to = data.get("reply_to")  
 
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
-    if reply_to is not None:  # ✅ Handles empty string, null, etc.
+    if reply_to is not None: 
         bot_response = f"meow! (in response to: {reply_to})"
     else:
         bot_response = f"You said: {user_message}"
 
     return jsonify({"response": bot_response}), 200
-
 
 # Test route
 @app.route("/")
