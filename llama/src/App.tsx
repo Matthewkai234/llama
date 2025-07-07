@@ -4,6 +4,8 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -12,7 +14,8 @@ function App() {
     <>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<div>hi</div>} />
+        <Route path="/" element={<ChatPage />} />
+        <Route path="/signup" element={<RegisterPage />} />
       </Routes>
     </>
   );

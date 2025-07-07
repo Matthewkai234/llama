@@ -2,25 +2,31 @@ import React, { useState, FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import "./authPages.css";
 
-interface LoginResponse {
+interface RegisterResponse {
   idToken?: string;
   error?: {
     message?: string;
   };
 }
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     try {
-      const response = await fetch("http://127.0.0.1:5000/login", {
+      const response = await fetch("http://127.0.0.1:5000/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,13 +34,15 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data: LoginResponse = await response.json();
+      const data: RegisterResponse = await response.json();
+      console.log("Response status:", response.status);
+      console.log("Response data:", data);
 
       if (response.ok && data.idToken) {
         localStorage.setItem("userToken", data.idToken);
         navigate("/");
       } else {
-        setError(data.error?.message || "Login failed");
+        setError(data.error?.message || "Registration failed");
       }
     } catch (err) {
       setError("Something went wrong. Try again later.");
@@ -42,16 +50,12 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleCreateAccount = () => {
-    navigate("/signup");
-  };
-
   return (
     <div className="login-page">
       <div className="auth-container">
         <div className="custom-auth-box">
-          <h2>Login</h2>
-          <form onSubmit={handleLogin}>
+          <h2>Create Account</h2>
+          <form onSubmit={handleRegister}>
             <input
               type="email"
               placeholder="Email"
@@ -70,17 +74,25 @@ const LoginPage: React.FC = () => {
               }
               required
             />
-            <button type="submit">Login</button>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setConfirmPassword(e.target.value)
+              }
+              required
+            />
+            <button type="submit">Register</button>
             {error && <p className="error">{error}</p>}
           </form>
-
           <div className="create-account-container">
-            <p>Don't have an account?</p>
+            <p>Already have an account?</p>
             <button
-              onClick={handleCreateAccount}
               className="create-account-button"
+              onClick={() => navigate("/login")}
             >
-              Create Account
+              Login
             </button>
           </div>
         </div>
@@ -89,4 +101,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

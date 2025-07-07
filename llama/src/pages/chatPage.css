@@ -1,0 +1,144 @@
+/* Full-page layout with background */
+.chat-page {
+  background-image: url('https://wallpapers.com/images/hd/ai-pictures-1920-x-1080-xl3e8icnjuafomrj.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Chat container box */
+.chat-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.chat-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 26px;
+}
+
+/* Message area */
+.messages-container {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 15px;
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.message {
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.user-message {
+  background-color: #d0eaff;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.bot-message {
+  background-color: #e6e6e6;
+  align-self: flex-start;
+  margin-right: auto;
+}
+
+/* Input form */
+.input-form {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.input-form input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-form input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+  background-color: white;
+}
+
+/* Send button */
+.input-form button {
+  padding: 14px 20px;
+  background-color: #4a90e2;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.input-form button:hover {
+  background-color: #357ab8;
+}
+
+/* Logout button */
+.logout-button {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #4a90e2;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-decoration: underline;
+}
+
+.logout-button:hover {
+  color: #357ab8;
+}
+
+/* Error message */
+.error {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.reply-button {
+    margin-left: 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  
+  .replying-to {
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
