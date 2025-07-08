@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response, jsonify, stream_with_context
 from flask_cors import CORS
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -6,7 +6,12 @@ import requests
 from dotenv import load_dotenv
 import os
 import re
+import asyncio
+import httpx
+import json
 
+history = []
+OLLAMA_BASE_URL = "http://localhost:11434"
 
 load_dotenv()
 
@@ -68,7 +73,6 @@ def login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Chatbot route
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
@@ -84,6 +88,72 @@ def chat():
         bot_response = f"You said: {user_message}"
 
     return jsonify({"response": bot_response}), 200
+
+
+
+@app.route("/ollama", methods=["POST"])
+def chat_with_ollama():
+    data = request.get_json()
+    model = data.get("model")
+    message = data.get("message")
+
+    if not model or not message:
+        return jsonify({"error": "Model and message are required"}), 400
+
+    user_message = {"role": "user", "content": message}
+    history.append(user_message)
+
+    async def async_generate():
+        yield ": stream started\n\n"
+        assistant_response = ""
+
+        try:
+            async with httpx.AsyncClient(timeout=None) as client:
+                async with client.stream("POST", f"{OLLAMA_BASE_URL}/api/chat", json={
+                    "model": model,
+                    "messages": history,
+                    "stream": True
+                }) as response:
+                    async for line in response.aiter_lines():
+                        if not line.strip():
+                            continue
+                        if line.strip() == "data: [DONE]":
+                            break
+                        if line.startswith("data: "):
+                            payload = json.loads(line.removeprefix("data: "))
+                            chunk = payload["message"]["content"]
+                            assistant_response += chunk
+                            yield f"data: {json.dumps({'chunk': chunk})}\n\n"
+
+            history.append({"role": "assistant", "content": assistant_response})
+            yield "data: [DONE]\n\n"
+        except Exception as e:
+            print("Error while communicating with Ollama:", e)
+            yield f"data: {json.dumps({'error': 'Streaming failed'})}\n\n"
+
+    def generate():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        async_gen = async_generate()
+
+        try:
+            while True:
+                chunk = loop.run_until_complete(async_gen.__anext__())
+                yield chunk
+        except StopAsyncIteration:
+            pass
+        finally:
+            loop.close()
+
+    return Response(stream_with_context(generate()), mimetype="text/event-stream")
+
+
+
+@app.route("/clear-history", methods=["POST"])
+def clear_history():
+    history.clear()
+    return jsonify({"success": True})
+
 
 # Test route
 @app.route("/")
