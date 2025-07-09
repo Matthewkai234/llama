@@ -48,7 +48,7 @@ class CSVQASystem:
         # Load embedding model
         self.embedding_model = SentenceTransformer(embedding_model_name)
 
-    def csv_to_paragraphs(file_path: str) -> list[str]:
+    def csv_to_paragraphs(self, file_path: str) -> list[str]:
         """
             Reads a CSV file and converts each row into a readable paragraph.
 
