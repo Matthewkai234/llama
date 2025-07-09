@@ -8,6 +8,7 @@ import numpy as np
 import pdfplumber
 from unsloth import FastLanguageModel
 
+
 from sentence_transformers import SentenceTransformer, util, CrossEncoder
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
