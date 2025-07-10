@@ -12,7 +12,7 @@ ALLaM_TOP_K = 50
 ALLaM_TOP_P = 0.95
 
 # Embedding Model
-EMBEDDING_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+EMBEDDING_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
 
 # Similarity threshold
 SIMILARITY_THRESHOLD = 0.2
