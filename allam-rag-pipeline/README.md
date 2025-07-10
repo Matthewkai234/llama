@@ -94,7 +94,8 @@ SIMILARITY_THRESHOLD = 0.2
 Or change the embedding model:
 
 ```python
-EMBEDDING_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+EMBEDDING_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+"
 ```
 
 ---
