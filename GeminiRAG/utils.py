@@ -1,7 +1,7 @@
-# utils.py
+# # utils.py
 
 """
-Utility to convert CSV content into paragraph text blocks.
+Utility functions for processing CSV content into text blocks.
 """
 
 import pandas as pd
@@ -10,13 +10,21 @@ import re
 
 def csv_to_paragraphs(file_path: str) -> list[str]:
     """
-    Reads a CSV file and converts each row into a single paragraph.
-    
+    Converts each row of a CSV file into a single cleaned paragraph string.
+
+    Each row is transformed into the format:
+        "column1: value1 - column2: value2 - ..."
+
     Args:
         file_path (str): Path to the CSV file.
-        
+
     Returns:
-        list[str]: Cleaned text paragraphs.
+        list[str]: A list of paragraph strings, one for each row in the CSV,
+                   with extra whitespace removed and columns joined.
+
+    Raises:
+        FileNotFoundError: If the CSV file does not exist at the given path.
+        UnicodeDecodeError: If the file cannot be decoded in UTF-8 or Windows-1256.
     """
     try:
         df = pd.read_csv(file_path, encoding='utf-8')
